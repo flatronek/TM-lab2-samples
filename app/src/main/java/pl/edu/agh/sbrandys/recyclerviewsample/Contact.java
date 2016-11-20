@@ -5,6 +5,7 @@ import java.util.List;
 public class Contact {
 
     private String name;
+    private String address;
     private List<String> phoneNumbers;
     private List<String> emailAddresses;
 
@@ -17,6 +18,17 @@ public class Contact {
         this.emailAddresses = emailAddresses;
     }
 
+    public Contact(String name, String address, List<String> phoneNumbers, List<String> emailAddresses) {
+        this.name = name;
+        this.address = address;
+        this.phoneNumbers = phoneNumbers;
+        this.emailAddresses = emailAddresses;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
     public String getName() {
         return name;
     }
@@ -27,6 +39,22 @@ public class Contact {
 
     public List<String> getEmailAddresses() {
         return emailAddresses;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setPhoneNumbers(List<String> phoneNumbers) {
+        this.phoneNumbers = phoneNumbers;
+    }
+
+    public void setEmailAddresses(List<String> emailAddresses) {
+        this.emailAddresses = emailAddresses;
     }
 
     @Override
@@ -53,6 +81,7 @@ public class Contact {
 
         return "Contact{" +
                 "name='" + name + '\'' +
+                ", address='" + address +'\'' +
                 ", phoneNumbers=" + phonesBuilder +
                 ", emailAddresses=" + emailsBuilder +
                 '}';

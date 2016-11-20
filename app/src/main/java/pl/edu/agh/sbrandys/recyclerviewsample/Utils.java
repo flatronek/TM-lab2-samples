@@ -21,20 +21,25 @@ import static android.content.ContentValues.TAG;
 
 public class Utils {
 
+    private static final String TAG = "Utils";
+
     public static final int CONTACTS_REQUEST_CODE = 123;
 
     public static List<Contact> retrieveContactsList(Context context) {
         ArrayList<Contact> result = new ArrayList<>();
 
         ContentResolver cr = context.getContentResolver();
-        Cursor cursor = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
-                String contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+        Cursor contactCursor = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
+        if (contactCursor != null) {
+            while (contactCursor.moveToNext()) {
+                Contact retrievedContact = new Contact();
+
+                String id = contactCursor.getString(contactCursor.getColumnIndex(ContactsContract.Contacts._ID));
+                String contactName = contactCursor.getString(contactCursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                retrievedContact.setName(contactName);
 
                 List<String> phoneNumbers = new ArrayList<>();
-                if (Integer.parseInt(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
+                if (Integer.parseInt(contactCursor.getString(contactCursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
                     Cursor phonesCursor = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?", new String[]{id}, null);
                     while (phonesCursor.moveToNext()) {
                         String contactNumber = phonesCursor.getString(phonesCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
@@ -42,6 +47,7 @@ public class Utils {
                     }
                     phonesCursor.close();
                 }
+                retrievedContact.setPhoneNumbers(phoneNumbers);
 
                 List<String> emailAddresses = new ArrayList<>();
                 Cursor emailsCursor = cr.query(
@@ -55,13 +61,25 @@ public class Utils {
                     }
                 }
                 emailsCursor.close();
+                retrievedContact.setEmailAddresses(emailAddresses);
 
-                Contact retrievedContact = new Contact(contactName, phoneNumbers, emailAddresses);
+                Cursor addressCursor = cr.query(
+                        ContactsContract.CommonDataKinds.StructuredPostal.CONTENT_URI, null,
+                        ContactsContract.CommonDataKinds.StructuredPostal.CONTACT_ID + " = ? AND " + ContactsContract.CommonDataKinds.StructuredPostal.MIMETYPE + " = ?",
+                        new String[]{id, ContactsContract.CommonDataKinds.StructuredPostal.CONTENT_ITEM_TYPE},
+                        null);
+
+                if (addressCursor.moveToFirst()) {
+                    String address = addressCursor.getString(addressCursor.getColumnIndex(ContactsContract.CommonDataKinds.StructuredPostal.FORMATTED_ADDRESS));
+                    retrievedContact.setAddress(address);
+                }
+                addressCursor.close();
+
                 result.add(retrievedContact);
                 Log.d(TAG, "retrieveContactsList: " + retrievedContact);
             }
 
-            cursor.close();
+            contactCursor.close();
         }
 
         return result;
