@@ -8,14 +8,19 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
+
+    private RecyclerView contactsRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        contactsRecyclerView = (RecyclerView) findViewById(R.id.contacts_recycler_view);
 
         if (!Utils.hasContactsPermission(this)) {
             Utils.requestContactsPermission(this);
