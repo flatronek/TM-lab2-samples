@@ -8,10 +8,14 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ContactAdapter.ContactClickListener {
+
+    private static final String TAG = "MainActivity";
 
     private RecyclerView contactsRecyclerView;
 
@@ -25,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         if (!Utils.hasContactsPermission(this)) {
             Utils.requestContactsPermission(this);
         } else {
-            // TODO RETRIEVE CONTACTS
+            initContactsRecycler();
         }
     }
 
@@ -36,12 +40,24 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode) {
             case Utils.CONTACTS_REQUEST_CODE: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // TODO RETRIEVE CONTACTS
+                    initContactsRecycler();
                 } else {
                     Toast.makeText(this, "No permission for contacts.", Toast.LENGTH_SHORT).show();
                 }
                 break;
             }
         }
+    }
+
+    private void initContactsRecycler() {
+        ContactAdapter adapter = new ContactAdapter(Utils.retrieveContactsList(this), this);
+        contactsRecyclerView.setAdapter(adapter);
+        contactsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        contactsRecyclerView.setHasFixedSize(true);
+    }
+
+    @Override
+    public void onContactItemClicked(Contact contact) {
+        Log.d(TAG, "onContactItemClicked: " + contact);
     }
 }

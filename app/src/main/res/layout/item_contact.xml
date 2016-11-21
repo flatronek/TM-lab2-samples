@@ -11,13 +11,14 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_margin="8dp"
-        android:layout_toEndOf="@id/contact_item_image"
+        android:layout_toEndOf="@+id/contact_item_image"
         android:layout_toStartOf="@+id/send_mail_icon"
         android:gravity="center_vertical"
         android:orientation="vertical"
         android:id="@+id/linearLayout">
 
         <TextView
+            android:id="@+id/contact_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
@@ -25,6 +26,7 @@
             tools:text="Test2 test2" />
 
         <LinearLayout
+            android:id="@+id/phone_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -37,6 +39,7 @@
                 android:src="@drawable/ic_phone"/>
 
             <TextView
+                android:id="@+id/contact_phone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
