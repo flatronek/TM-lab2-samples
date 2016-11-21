@@ -1,8 +1,12 @@
 package pl.edu.agh.sbrandys.recyclerviewsample;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
 import java.util.List;
 
-public class Contact {
+public class Contact implements Serializable {
 
     private String name;
     private String address;

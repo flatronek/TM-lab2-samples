@@ -1,6 +1,7 @@
 package pl.edu.agh.sbrandys.recyclerviewsample;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -59,5 +60,12 @@ public class MainActivity extends AppCompatActivity implements ContactAdapter.Co
     @Override
     public void onContactItemClicked(Contact contact) {
         Log.d(TAG, "onContactItemClicked: " + contact);
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(ContactDetailsActivity.CONTACT_EXTRA, contact);
+
+        Intent intent = new Intent(this, ContactDetailsActivity.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 }
